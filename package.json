@@ -1,0 +1,24 @@
+{
+  "name": "nodejs_course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hidemydreams/basic-nodejs-2021Q2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hidemydreams/basic-nodejs-2021Q2/issues"
+  },
+  "homepage": "https://github.com/hidemydreams/basic-nodejs-2021Q2#readme",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0"
+  }
+}

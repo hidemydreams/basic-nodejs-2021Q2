@@ -9,11 +9,15 @@ cli
   .option('-a, --action <action>', 'encode or decode action');
 cli.parse(process.argv);
 const options = cli.opts();
+const inputFilename = options.input;
+const shift = options.shift;
+const outputFilename = options.output;
+const action = options.action;
 if (options.input && options.shift && options.output && options.action) {
-  const inputFilename = options.input;
-  const shift = options.shift;
-  const outputFilename = options.output;
-  const action = options.action;
-  console.log(inputFilename, outputFilename);
-  writeStreamToFile(inputFilename, shift, outputFilename, action);
+  writeStreamToFile(inputFilename, outputFilename, shift);
+  console.log('writing');
+} else if (shift === undefined) {
+  console.log('please provide shift number');
+} else if (!Number.isInteger(shift)) {
+  console.log('shift must be a number');
 }

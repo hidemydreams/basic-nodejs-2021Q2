@@ -1,26 +1,27 @@
 const fs = require('fs');
 const path = require('path');
 const { Transform } = require('stream');
-const { caesarShift } = require('./caesar_encoder');
+const { caesarCipher } = require('./caesar_encoder');
 
 const toUpperCaseReverseStream = (shiftNum) => {
   return new Transform({
     transform(chunk, encoding, cb) {
-      const transformedChunk = caesarShift(chunk.toString(), shiftNum);
-      cb(null, transformedChunk);
+      const transformedChunk = caesarCipher(chunk.toString(), shiftNum);
+      cb(null, transformedChunk + '\n');
     },
   });
 };
 
-const transformStream = toUpperCaseReverseStream(25);
-let writeStreamToFile = (inputFilename, outputFilename) => {
+let writeStreamToFile = (inputFilename, outputFilename, shift) => {
+  const transformStream = toUpperCaseReverseStream(parseInt(shift));
   const myReadStream = fs.createReadStream(
     path.resolve(__dirname, inputFilename),
     'utf8'
   );
   const myWriteStream = fs.createWriteStream(
     path.resolve(__dirname, outputFilename),
-    'utf8'
+    { flags: 'a' },
+    'utf-8'
   );
   myReadStream.pipe(transformStream).pipe(myWriteStream);
 };

@@ -1,7 +1,9 @@
-function caesarCipher(str, shift) {
+function caesarCipher(str, shift, action) {
+  if (action === 'decode') {
+    shift = -shift;
+  }
   const alphabetArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
   let result = '';
-
   for (let i = 0; i < str.length; i++) {
     const char = str[i];
     const idx = alphabetArr.indexOf(char);
@@ -9,7 +11,6 @@ function caesarCipher(str, shift) {
       result += char;
       continue;
     }
-
     let encodedIdx = (idx + shift) % 26;
     if (encodedIdx < 0) {
       const numberFromEnd = alphabetArr.length - Math.abs(encodedIdx);

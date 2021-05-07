@@ -13,7 +13,6 @@ const toUpperCaseReverseStream = (shiftNum, action) => {
 };
 
 let writeStreamToFile = (inputFilename, outputFilename, shift, action) => {
-  console.log(inputFilename);
   const transformStream = toUpperCaseReverseStream(parseInt(shift), action);
   const myReadStream = fs.createReadStream(
     path.resolve(__dirname, inputFilename),

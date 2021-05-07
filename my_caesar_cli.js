@@ -1,12 +1,13 @@
 const cli = require('commander');
 const { writeStreamToFile } = require('./transform-stream');
 cli.version('0.0.1');
-// Options;
+
+// Options
 cli
-  .option('-s, --shift <number>', 'Shift for decoding')
+  .requiredOption('-s, --shift <number>', 'Shift for decoding')
   .option('-i, --input <filename>', 'Input file')
   .option('-o, --output <filename>', 'Output file')
-  .option('-a, --action <action>', 'encode or decode action');
+  .requiredOption('-a, --action <type>', 'encode or decode action');
 cli.parse(process.argv);
 
 const options = cli.opts();
@@ -20,19 +21,8 @@ if (options.input && options.shift && options.output && options.action) {
 } else if (shift === undefined) {
   console.log('please provide shift number');
 } else if (!Number.isInteger(parseInt(shift))) {
-  console.log('shift must be a number');
-} else if (inputFilename.startsWith('-')) {
-  const prompts = [
-    'Type in any string characters > ',
-    'Here is your encoded string > ',
-  ];
-  const writeToConsole = (promptIndex) => {
-    process.stdout.write(prompts[promptIndex]);
-  };
-
-  writeToConsole(0);
-
-  process.stdin.on('data', (data) => {
-    writeStreamToFile(data.toString(), outputFilename, shift, action);
-  });
+  process.stderr.write(`Caught Exception. Err: ${err}`);
+  process.exit(1);
 }
+
+console.log(options);

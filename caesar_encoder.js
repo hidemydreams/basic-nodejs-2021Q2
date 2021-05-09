@@ -1,25 +1,22 @@
 const caesarCipher = (text, shift, mode) => {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  const alphabetArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
   shift = parseInt(shift);
   if (mode === 'decode') {
     shift *= -1;
   }
-  console.log(typeof shift);
   return (
     text
       .split('')
       .map((symbol) => {
         const lowerCaseOfSymbol = symbol.toLowerCase();
-
-        // Try to find an index of the symbol in the array <alphabet>
-        const index = alphabet.indexOf(lowerCaseOfSymbol);
+        const index = alphabetArr.indexOf(lowerCaseOfSymbol);
         if (index >= 0) {
-          const isLowerCase = symbol === lowerCaseOfSymbol; // whether the symbol is in the lower registry
-          let shiftedIndex = (index + shift) % alphabet.length;
+          const isLowerCase = symbol === lowerCaseOfSymbol;
+          let shiftedIndex = (index + shift) % alphabetArr.length;
           if (shiftedIndex < 0) {
-            shiftedIndex += alphabet.length;
+            shiftedIndex += alphabetArr.length;
           }
-          let image = alphabet[shiftedIndex];
+          let image = alphabetArr[shiftedIndex];
           if (!isLowerCase) {
             image = image.toUpperCase();
           }

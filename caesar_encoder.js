@@ -24,7 +24,7 @@ const caesarCipher = (text, shift, mode) => {
       return symbol;
     }
   });
-  return result.join('') + '\n';
+  return result.join('').trim() + '\n';
 };
 module.exports = {
   caesarCipher,

@@ -4,6 +4,7 @@ const caesarCipher = (text, shift, mode) => {
   if (mode === 'decode') {
     shift = -shift;
   }
+
   const textToArray = text.split('');
   const result = textToArray.map((symbol) => {
     const lowerCaseOfSymbol = symbol.toLowerCase();

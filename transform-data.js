@@ -3,12 +3,7 @@ const path = require('path');
 const { encodeStream } = require('./streams');
 const chalk = require('chalk');
 
-let writeStreamToFile = async (
-  inputFilename,
-  outputFilename,
-  shift,
-  action
-) => {
+let writeStreamToFile = (inputFilename, outputFilename, shift, action) => {
   let inputTarget;
   let outputTarget;
   if (!inputFilename) {

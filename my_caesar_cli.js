@@ -1,18 +1,14 @@
 const cli = require('commander');
 const chalk = require('chalk');
-const {
-  writeStreamToFile,
-  // writeTextToFile,
-  // writeTextToConsole,
-} = require('./transform-stream');
+const { writeStreamToFile } = require('./transform-data');
 cli.version('0.0.1');
-const prompts = ['Type any string to encode it > '];
 // Options
 cli
   .requiredOption('-s, --shift <number>', 'Shift for decoding')
   .option('-i, --input <type>', 'Input file')
   .option('-o, --output <filename>', 'Output file')
   .requiredOption('-a, --action <type>', 'encode or decode action');
+
 cli.parse(process.argv);
 const options = cli.opts();
 const inputFilename = options.input;

@@ -2,31 +2,28 @@ const caesarCipher = (text, shift, mode) => {
   const alphabetArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
   shift = parseInt(shift);
   if (mode === 'decode') {
-    shift *= -1;
+    shift = -shift;
   }
-  return (
-    text
-      .split('')
-      .map((symbol) => {
-        const lowerCaseOfSymbol = symbol.toLowerCase();
-        const index = alphabetArr.indexOf(lowerCaseOfSymbol);
-        if (index >= 0) {
-          const isLowerCase = symbol === lowerCaseOfSymbol;
-          let shiftedIndex = (index + shift) % alphabetArr.length;
-          if (shiftedIndex < 0) {
-            shiftedIndex += alphabetArr.length;
-          }
-          let image = alphabetArr[shiftedIndex];
-          if (!isLowerCase) {
-            image = image.toUpperCase();
-          }
-          return image;
-        } else {
-          return symbol;
-        }
-      })
-      .join('') + '\n'
-  );
+  const textToArray = text.split('');
+  const result = textToArray.map((symbol) => {
+    const lowerCaseOfSymbol = symbol.toLowerCase();
+    const index = alphabetArr.indexOf(lowerCaseOfSymbol);
+    if (index >= 0) {
+      const isLowerCase = symbol === lowerCaseOfSymbol;
+      let shifted = (index + shift) % alphabetArr.length;
+      if (shifted < 0) {
+        shifted += alphabetArr.length;
+      }
+      let shiftedTable = alphabetArr[shifted];
+      if (!isLowerCase) {
+        shiftedTable = shiftedTable.toUpperCase();
+      }
+      return shiftedTable;
+    } else {
+      return symbol;
+    }
+  });
+  return result.join('') + '\n';
 };
 module.exports = {
   caesarCipher,

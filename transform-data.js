@@ -1,41 +1,30 @@
 const fs = require('fs');
-const path = require('path');
-const { encodeStream } = require('./streams');
-const chalk = require('chalk');
+const { pipeline } = require('stream');
+const { runCliArgs } = require('./my_caesar_cli.js');
+const { TransformationStream } = require('./streams');
+const { actionValidationShift, fileValidation } = require('./my_caesar_cli.js');
 
-let writeStreamToFile = (inputFilename, outputFilename, shift, action) => {
-  let inputTarget;
-  let outputTarget;
-  if (!inputFilename) {
-    inputTarget = process.stdin;
-  } else {
-    inputTarget = fs
-      .createReadStream(path.resolve(__dirname, inputFilename), 'utf8')
-      .on('error', (err) => {
-        process.stderr.write(chalk.white.bgRed.bold('No such input file...\n'));
-        process.exit(1);
-      });
-  }
-  if (!outputFilename) {
-    outputTarget = process.stdin;
-  } else {
-    outputTarget = fs
-      .createWriteStream(
-        path.resolve(__dirname, outputFilename),
-        { flags: 'a' },
-        'utf-8'
-      )
-      .on('error', (err) => {
-        process.stderr.write(
-          chalk.white.bgRed.bold('No such output file...\n')
-        );
-        process.exit(1);
-      });
-  }
-  const transformStream = encodeStream(parseInt(shift), action);
-  inputTarget.pipe(transformStream).pipe(outputTarget);
-};
+const options = runCliArgs();
+let readFromConsole = process.stdin;
+let writeToConsole = process.stdout;
+// if options exist, we are reading from files
+if (options.hasOwnProperty('input')) {
+  fileValidation(options.input);
+  readFromConsole = fs.createReadStream(options.input, 'utf8');
+}
 
-module.exports = {
-  writeStreamToFile,
-};
+if (options.hasOwnProperty('output')) {
+  writeToConsole = fs.createWriteStream(options.output, { flags: 'a' });
+}
+
+actionValidationShift(options.action, options.shift);
+pipeline(
+  readFromConsole,
+  new TransformationStream(options.action, options.shift),
+  writeToConsole,
+  (error) => {
+    if (error) {
+      process.stderr('Please check everything for errors and try 1 more time');
+    }
+  }
+);

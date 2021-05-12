@@ -1,14 +1,16 @@
 const { Transform } = require('stream');
-const { caesarCipher } = require('./caesar_encoder');
-const encodeStream = (shiftNum, action) => {
-  return new Transform({
-    transform(chunk, encoding, cb) {
-      const transformedChunk = caesarCipher(chunk.toString(), shiftNum, action);
-      cb(null, transformedChunk);
-    },
-  });
-};
+const { caesarCipher } = require('./caesar_encoder.js');
+class TransformationStream extends Transform {
+  constructor(action, shift) {
+    super(action, shift);
+    this.action = action;
+    this.shift = shift;
+  }
+  _transform(chunk, encoding, cb) {
+    chunk =
+      caesarCipher(chunk.toString('utf8'), this.shift, this.action) + '\n';
+    cb(null, chunk);
+  }
+}
 
-module.exports = {
-  encodeStream,
-};
+module.exports = { TransformationStream };

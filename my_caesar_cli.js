@@ -1,37 +1,49 @@
 const cli = require('commander');
 const chalk = require('chalk');
-const { writeStreamToFile } = require('./transform-data');
-cli.version('0.0.1');
-// Options
-cli
-  .requiredOption('-s, --shift <number>', 'Shift for decoding')
-  .option('-i, --input <type>', 'Input file')
-  .option('-o, --output <filename>', 'Output file')
-  .requiredOption('-a, --action <type>', 'encode or decode action');
-
-cli.parse(process.argv);
-const options = cli.opts();
-const inputFilename = options.input;
-const shift = options.shift;
-const outputFilename = options.output;
-const action = options.action;
-
-if (isNaN(shift)) {
-  process.stderr.write(
-    chalk.white.bgRed.bold('Please provide a number for shift \n')
-  );
+const fs = require('fs');
+const runCliArgs = () => {
+  cli.version('0.0.1');
+  cli
+    .requiredOption('-s, --shift <number>', 'Shift number')
+    .requiredOption('-a, --action <type>', 'encode/decode action')
+    .option('-i, --input <type>', 'File for reading')
+    .option('-o, --output <filename>', 'File for output');
+  cli.parse(process.argv);
+  return cli.opts();
+};
+// Arguments Validation
+const actionValidation = (action) => {
+  if (action) {
+    if (action === 'encode' || action === 'decode') {
+      return;
+    }
+  }
+  console.error(chalk.red('Type of action must be encode or decode'));
   process.exit(1);
-} else if (!inputFilename) {
-  process.stdin.write(
-    chalk.white.bgBlue.bold(
-      'input file was not defined, use console instead \n'
-    )
-  );
-} else if (!outputFilename) {
-  process.stdin.write(
-    chalk.white.bgBlue.bold(
-      'output file was not defined, here is your result \n'
-    )
-  );
-}
-writeStreamToFile(inputFilename, outputFilename, shift, action);
+};
+const shiftValidation = (shift) => {
+  if (shift) {
+    if (Number.isInteger(+shift)) {
+      return;
+    }
+  }
+  console.error(chalk.red('Shift must be a number'));
+  process.exit(1);
+};
+const actionValidationShift = (action, shift) => {
+  actionValidation(action);
+  shiftValidation(shift);
+};
+const fileValidation = (file) => {
+  try {
+    fs.accessSync(file, fs.constants.F_OK);
+  } catch (err) {
+    console.error(chalk.red(`'${file}':  No such file`));
+    process.exitCode = 1;
+  }
+};
+module.exports = {
+  runCliArgs,
+  actionValidationShift,
+  fileValidation,
+};
